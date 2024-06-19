@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 50px;
+    }
+    h1, h2 {
+      margin-bottom: 10px;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #weather-info {
+      margin-top: 20px;
+      white-space: pre-wrap;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <h1>Weather App</h1>
+  <div>
+    <input type="text" id="locationInput" placeholder="Enter location">
+    <button onclick="getWeather()">Get Weather</button>
+  </div>
+  <div id="weather-info"></div>
+
+  <script>
+    async function getWeather() {
+      const location = document.getElementById('locationInput').value;
+      if (!location) {
+        alert('Please enter a location');
+        return;
+      }
+
+      try {
+        const response = await fetch(`/weather?location=${encodeURIComponent(location)}`);
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to fetch weather data');
+        }
+
+        // Display JSON data
+        document.getElementById('weather-info').innerText = JSON.stringify(data, null, 2);
+      } catch (error) {
+        console.error('Error fetching weather:', error.message);
+        alert('Failed to fetch weather data');
+      }
+    }
+  </script>
+</body>
+</html>
